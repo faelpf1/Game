@@ -34,7 +34,7 @@ export default class Game extends Phaser.Scene {
             player.setVelocityX(160);
             player.setFlip(false, false);
             player.anims.play('right', 'true');
-        } else if (this.teclas.up.isDown && player.body.touching.down) { //corrigir animação de pulo
+        } else if (this.teclas.up.isDown && player.body.touching.down) { //corrigir animação de pulo ou excluir caso mapa seja feito via tilemap
             player.setVelocityY(-175);
             player.anims.play('jump');
         } else {
