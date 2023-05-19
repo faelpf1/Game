@@ -108,7 +108,7 @@ class DungeonScene extends Phaser.Scene {
 						this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
 					}
 				}
-			});
+			});   
 			this.groundLayer.setCollisionByExclusion([-1, 6, 7, 8, 26]);
 		this.stuffLayer.setCollisionByExclusion([-1, 6, 7, 8, 26]);
 
