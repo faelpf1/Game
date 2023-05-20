@@ -1,9 +1,9 @@
 export default class LoadGame extends Phaser.Scene {
-    constructor(){
-        super({key: 'LoadGame'});
+    constructor() {
+        super({ key: 'LoadGame' });
     }
-      
-    preload(){
+
+    preload() {
         // this.load.on('complete', ()=>{
         //     this.scene.start('Game');
         // });
@@ -14,7 +14,7 @@ export default class LoadGame extends Phaser.Scene {
 
     }
 
-    create(){
+    create() {
         // const level = [
         //     [  16,   0,   0,   0,   0,   0,   0,   0,   0,   0,   18 ],
         //     [  48,   32,   32,   33,   32,   32,   32,   32,   32,   32,   50],
@@ -27,7 +27,7 @@ export default class LoadGame extends Phaser.Scene {
         //     [  80,   5,   5,   5,   5,   5,   5,   5,   5,   5,   82 ],
         //     [  80,   5,   5,   5,   5,   5,   5,   5,   5,   5,   82 ],
         //     [  112,   32,   32,   33,   32,   32,   32,   32,   32,   32,   114 ],
-            
+
         //   ];
 
         const map = this.make.tilemap({ key: 'map' });
@@ -40,6 +40,6 @@ export default class LoadGame extends Phaser.Scene {
 
     }
 
-    update(){}
+    update() { }
 
 }
