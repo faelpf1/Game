@@ -5,10 +5,14 @@
 const TILE_MAPPING = {
 	BLANK: 117,
 	WALL: {
-		TOP_LEFT: [[19, 51]],
-		TOP_RIGHT: [[20, 52]],
-		BOTTOM_LEFT: [[83, 115]],
-		BOTTOM_RIGHT: [[84, 116]],
+		TOP_LEFT_UP: 19,
+		TOP_LEFT_DOWN: 51,
+		TOP_RIGHT_UP: 20,
+		TOP_RIGHT_DOWN: 52,
+		BOTTOM_LEFT_UP: 83,
+		BOTTOM_LEFT_DOWN: 115,
+		BOTTOM_RIGHT_UP: 84,
+		BOTTOM_RIGHT_DOWN: 116,
 		TOP: [
 			{ index: [[0, 32]], weight: 4 },
 		],
