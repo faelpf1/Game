@@ -1,6 +1,5 @@
 import Player from "./player.js";
 import TILES from "./tile-mapping.js";
-import TilemapVisibility from "./tilemap-visibility.js";
 
 export default class DungeonScene extends Phaser.Scene {
 	constructor() {
@@ -9,34 +8,24 @@ export default class DungeonScene extends Phaser.Scene {
 	}
 
 	preload() {
-		this.load.image('tiles', 'assets/background/tileMap/tileMapDungeon.png');
+		this.load.image('tiles', 'assets/tileMap/tileMapDungeon.png');
 		this.load.spritesheet("characters", "assets/player/charTMP.png", { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
 	}
 
 	create() {
-		// Generate a random world with a few extra options:
-		//  - Rooms should only have odd number dimensions so that they have a center tile.
-		//  - Doors should be at least 2 tiles away from corners, so that we can place a corner tile on
-		//    either side of the door location
 		this.dungeon = new Dungeon({
 			width: 50,
 			height: 50,
-			doorPadding: 2,
+			doorPadding: 2, /* Doors should be at least 2 tiles away from corners, so that we can place a corner tile on either side of the door location */
 			rooms: {
-				width: { min: 7, max: 15, onlyOdd: true },
+				width: { min: 7, max: 15, onlyOdd: true }, /* Rooms should only have odd number dimensions so that they have a center tile. */
 				height: { min: 7, max: 15, onlyOdd: true },
 			},
 		});
 
 		//this.dungeon.drawToConsole();
 
-		const map = this.make.tilemap({
-			tileWidth: 48,
-			tileHeight: 48,
-			width: this.dungeon.width,
-			height: this.dungeon.height,
-		});
-
+		const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
 		const tileset = map.addTilesetImage("tiles", null, 48, 48, 0, 0);  /* tile height and tile width, tile margin, tile spacing */
 		this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK);
 		this.stuffLayer = map.createBlankLayer("Stuff", tileset);
@@ -77,32 +66,19 @@ export default class DungeonScene extends Phaser.Scene {
 			}
 		});
 
-		// Not exactly correct for the tileset since there are more possible floor tiles, but this will
-		// do for the example.
-		this.groundLayer.setCollisionByExclusion([-1, 6, 7, 8, 26]);
+		this.groundLayer.setCollisionByExclusion([-1, 6, 7, 8, 26]); /* Not exactly correct for the tileset since there are more possible floor tiles, but this will do for the example. */
 
-		// Place the player in the center of the map
-		this.player = new Player(this, map.widthInPixels / 2, map.heightInPixels / 2);
+		this.player = new Player(this, map.widthInPixels / 2, map.heightInPixels / 2); /* Place the player in the center of the map */
 
-		// Watch the player and ground layer for collisions, for the duration of the scene:
-		this.physics.add.collider(this.player.sprite, this.groundLayer);
+		this.physics.add.collider(this.player.sprite, this.groundLayer); /* Watch the player and ground layer for collisions, for the duration of the scene: */
 
-		// Phaser supports multiple cameras, but you can access the default camera like this:
-		const camera = this.cameras.main;
+		const camera = this.cameras.main; /* Acess default phaer default camera */ 
 
-		// Constrain the camera so that it isn't allowed to move outside the width/height of tilemap
-		camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+		camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels); /* Constrain the camera so that it isn't allowed to move outside the width/height of tilemap */
 		camera.startFollow(this.player.sprite);
 
 		/* Help text that has a "fixed" position on the screen */
-		this.add
-			.text(16, 16, `Find the stairs. Go deeper.\nCurrent level: ${this.level}`, {
-				font: "18px monospace",
-				fill: "#000000",
-				padding: { x: 20, y: 10 },
-				backgroundColor: "#ffffff",
-			})
-			.setScrollFactor(0);
+		this.add.text(16, 16, `Find the stairs. Go deeper.\nCurrent level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 20, y: 10 }, backgroundColor: "#ffffff"}).setScrollFactor(0);
 	}
 
 	update(time, delta) {
