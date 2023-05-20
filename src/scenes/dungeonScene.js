@@ -39,9 +39,9 @@ export default class DungeonScene extends Phaser.Scene {
 			this.groundLayer.weightedRandomize(TILES.FLOOR, x , y +1 , width -2 , height -2 );
 
 			/* Place the room corners tiles */
-			this.groundLayer.putTileAt(TILES.WALL.TOP_LEFT_UP, left, top -1);
+			this.groundLayer.putTileAt(TILES.WALL.TOP_LEFT_UP, left, top-1);
 			this.groundLayer.putTileAt(TILES.WALL.TOP_LEFT_DOWN, left , top);
-			this.groundLayer.putTileAt(TILES.WALL.TOP_RIGHT_UP, right-2, top -1);
+			this.groundLayer.putTileAt(TILES.WALL.TOP_RIGHT_UP, right-2, top-1);
 			this.groundLayer.putTileAt(TILES.WALL.TOP_RIGHT_DOWN, right-2, top);
 			this.groundLayer.putTileAt(TILES.WALL.BOTTOM_LEFT_UP, left, bottom-2);
 			this.groundLayer.putTileAt(TILES.WALL.BOTTOM_LEFT_DOWN, left, bottom-1);
@@ -50,10 +50,12 @@ export default class DungeonScene extends Phaser.Scene {
 			
 
 			/* Fill the walls with mostly clean tiles */
-			//this.groundLayer.weightedRandomize(TILES.WALL.TOP, left + 1, top, width - 2, 1);
-			//this.groundLayer.weightedRandomize(TILES.WALL.BOTTOM, left + 1, bottom, width - 2, 1);
-			//this.groundLayer.weightedRandomize(TILES.WALL.LEFT, left, top + 1, 1, height - 2);
-			//this.groundLayer.weightedRandomize(TILES.WALL.RIGHT, right, top + 1, 1, height - 2);
+			this.groundLayer.weightedRandomize(TILES.WALL.TOP_UP, left+1, top-1 , width-4, 1);
+			this.groundLayer.weightedRandomize(TILES.WALL.TOP_DOWN, left+1, top, width-4, 1);
+			this.groundLayer.weightedRandomize(TILES.WALL.BOTTOM_UP, left, bottom-2, width - 2, 1);
+			this.groundLayer.weightedRandomize(TILES.WALL.BOTTOM_DOWN, left, bottom-1, width - 2, 1);
+			this.groundLayer.weightedRandomize(TILES.WALL.LEFT, left, top , 1, height-2); // arrumar o top
+			this.groundLayer.weightedRandomize(TILES.WALL.RIGHT, right-2, top , 1, height-2); // arrumar o top
 
 			// Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
 			// room's location. Each direction has a different door to tile mapping.

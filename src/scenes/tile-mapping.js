@@ -13,18 +13,12 @@ const TILE_MAPPING = {
 		BOTTOM_LEFT_DOWN: 115,
 		BOTTOM_RIGHT_UP: 84,
 		BOTTOM_RIGHT_DOWN: 116,
-		TOP: [
-			{ index: [[0, 32]], weight: 4 },
-		],
-		LEFT: [
-			{ index: [[0, 32]], weight: 4 },
-		],
-		RIGHT: [
-			{ index: [[0, 32]], weight: 4 },
-		],
-		BOTTOM: [
-			{ index: [[0, 32]], weight: 4 },
-		],
+		TOP_UP: [{ index: 0, weight: 4 }],
+		TOP_DOWN: [{ index: 32, weight: 4 }],
+		LEFT: [{ index: 82, weight: 4 }],
+		RIGHT: [{ index: 80, weight: 4 }],
+		BOTTOM_UP: [{ index: 0, weight: 4 }],
+		BOTTOM_DOWN: [{ index: 32, weight: 4 }],
 	},
 	FLOOR: [
 		{ index: 5, weight: 9 },
