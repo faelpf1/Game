@@ -1,24 +1,28 @@
-import Game from './scenes/game.js'
-import LoadGame from './scenes/loadGame.js'
+//import Game from './scenes/game.js';
+//import LoadGame from './scenes/loadGame.js';
+import DungeonScene from './scenes/dungeonScene.js';
+import LoadGame from './scenes/loadGame.js';
 
 const config = {
     type: Phaser.AUTO,
-    width: 1280,
-    height: 720,
-    parent: 'p2',
+    width: 800,
+    height: 600,
+    backgroundColor: '#000000',
+    parent: 'game-id',
+    pixelArt: true,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: {
-                y: 150
-            },
-            debug: true
+            gravity: { y: 0 },
+            debug: false
         }
     },
-    scene: [
-        LoadGame,
-        Game
-    ]
+    scene: DungeonScene,
+    //scene: LoadGame,
+    // scene: [
+    //     LoadGame,
+    //     Game
+    // ]
 };
 
 const game = new Phaser.Game(config);
