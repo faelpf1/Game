@@ -28,38 +28,40 @@ export default class DungeonScene extends Phaser.Scene {
 		const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
 		const tileset = map.addTilesetImage("tiles", null, 48, 48, 0, 0);  /* tile height and tile width, tile margin, tile spacing */
 		this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK);
+		this.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK);
 		this.stuffLayer = map.createBlankLayer("Stuff", tileset);
 
-		// Use the array of rooms generated to place tiles in the map
-		// Note: using an arrow function here so that "this" still refers to our scene
+		/* Generate tiles on map */
 		this.dungeon.rooms.forEach((room) => {
 			const { x, y, width, height, left, right, top, bottom } = room;
 
-			/* Fill the floor with mostly clean tiles */
-			this.groundLayer.weightedRandomize(TILES.FLOOR, x , y +1 , width -2 , height -2 );
+			/* Place floor */
+			this.groundLayer.weightedRandomize(TILES.FLOOR, x , y+1 , width-2 , height-2 );
 
-			/* Place the room corners tiles */
-			this.groundLayer.putTileAt(TILES.WALL.TOP_LEFT_UP, left, top-1);
-			this.groundLayer.putTileAt(TILES.WALL.TOP_LEFT_DOWN, left , top);
-			this.groundLayer.putTileAt(TILES.WALL.TOP_RIGHT_UP, right-2, top-1);
-			this.groundLayer.putTileAt(TILES.WALL.TOP_RIGHT_DOWN, right-2, top);
-			this.groundLayer.putTileAt(TILES.WALL.BOTTOM_LEFT_UP, left, bottom-2);
-			this.groundLayer.putTileAt(TILES.WALL.BOTTOM_LEFT_DOWN, left, bottom-1);
-			this.groundLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_UP, right-2, bottom-2);
-			this.groundLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_DOWN, right-2, bottom-1);
+			/* Place corner walls */
+			this.wallLayer.putTileAt(TILES.WALL.TOP_LEFT_UP, left , top-1);
+			this.wallLayer.putTileAt(TILES.WALL.TOP_LEFT_DOWN, left , top);
+
+			this.wallLayer.putTileAt(TILES.WALL.TOP_RIGHT_UP, right-2, top-1)
+			this.wallLayer.putTileAt(TILES.WALL.TOP_RIGHT_DOWN, right-2, top)
+
+			this.wallLayer.putTileAt(TILES.WALL.BOTTOM_LEFT_UP, left, bottom-2);
+			this.wallLayer.putTileAt(TILES.WALL.BOTTOM_LEFT_DOWN, left, bottom-1);
+
+			this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_UP, right-2, bottom-2);
+			this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_DOWN, right-2, bottom-1);
 			
-
 			/* Fill the walls with mostly clean tiles */
-			this.groundLayer.weightedRandomize(TILES.WALL.TOP_UP, left+1, top-1 , width-4, 1);
-			this.groundLayer.weightedRandomize(TILES.WALL.TOP_DOWN, left+1, top, width-4, 1);
-			this.groundLayer.weightedRandomize(TILES.WALL.BOTTOM_UP, left, bottom-2, width - 2, 1);
-			this.groundLayer.weightedRandomize(TILES.WALL.BOTTOM_DOWN, left, bottom-1, width - 2, 1);
-			this.groundLayer.weightedRandomize(TILES.WALL.LEFT, left, top , 1, height-2); // arrumar o top
-			this.groundLayer.weightedRandomize(TILES.WALL.RIGHT, right-2, top , 1, height-2); // arrumar o top
+			this.wallLayer.weightedRandomize(TILES.WALL.TOP_UP, left+1, top-1 , width-4, 1);
+			this.wallLayer.weightedRandomize(TILES.WALL.TOP_DOWN, left+1, top, width-4, 1);
+			this.wallLayer.weightedRandomize(TILES.WALL.BOTTOM_UP, left+1, bottom-2, width-4, 1);
+			this.wallLayer.weightedRandomize(TILES.WALL.BOTTOM_DOWN, left+1, bottom-1, width-4, 1);
+			this.wallLayer.weightedRandomize(TILES.WALL.LEFT, left, top+1 , 1, height-4);
+			this.wallLayer.weightedRandomize(TILES.WALL.RIGHT, right-2, top+1 , 1, height-4);
 
 			// Dungeons have rooms that are connected with doors. Each door has an x & y relative to the
 			// room's location. Each direction has a different door to tile mapping.
-			const doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
+			//const doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
 			// for (let i = 0; i < doors.length; i++) {
 			// 	if (doors[i].y === 0) {
 			// 		this.groundLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);
