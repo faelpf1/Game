@@ -19,10 +19,10 @@ export default class DungeonScene extends Phaser.Scene {
 		this.dungeon = new Dungeon({
 			width: 50,
 			height: 50,
-			doorPadding: 2, /* Doors should be at least 2 tiles away from corners, so that we can place a corner tile on either side of the door location */
+			doorPadding: 5, /* Doors should be at least 2 tiles away from corners, so that we can place a corner tile on either side of the door location */
 			rooms: {
-				width: { min: 7, max: 15, onlyOdd: true }, /* Rooms should only have odd number dimensions so that they have a center tile. */
-				height: { min: 7, max: 15, onlyOdd: true },
+				width: { min: 11, max: 21, onlyOdd: true }, /* Rooms should only have odd number dimensions so that they have a center tile. */
+				height: { min: 11, max: 21, onlyOdd: true },
 			},
 		});
 
@@ -65,13 +65,19 @@ export default class DungeonScene extends Phaser.Scene {
 			const doors = room.getDoorLocations(); // → Returns an array of {x, y} objects
 			for (let i = 0; i < doors.length; i++) {
 				if (doors[i].y === 0) {
-					//this.wallLayer.putTilesAt(TILES.DOOR.TOP, x + doors[i].x - 1, y + doors[i].y);
+					this.wallLayer.putTilesAt(TILES.DOOR.TOP_UP, x + doors[i].x - 2, y + doors[i].y - 1);
+					this.wallLayer.putTilesAt(TILES.DOOR.TOP_DOWN, x + doors[i].x - 2, y + doors[i].y);
 				} else if (doors[i].y === room.height - 1) {
-					//this.groundLayer.putTilesAt(TILES.DOOR.BOTTOM, x + doors[i].x - 1, y + doors[i].y);
+					this.wallLayer.putTilesAt(TILES.DOOR.BOTTOM_UP, x + doors[i].x - 2, y + doors[i].y - 2);
+					this.wallLayer.putTilesAt(TILES.DOOR.BOTTOM_DOWN, x + doors[i].x - 2, y + doors[i].y - 1);
 				} else if (doors[i].x === 0) {
-					//this.groundLayer.putTilesAt(TILES.DOOR.LEFT, x + doors[i].x, y + doors[i].y - 1);
+					this.wallLayer.putTilesAt(TILES.DOOR.LEFT_UP, x + doors[i].x, y + doors[i].y - 1 );
+					this.groundLayer.putTilesAt(TILES.DOOR.FLOOR, x + doors[i].x-1, y + doors[i].y + 1);
+					this.wallLayer.putTilesAt(TILES.DOOR.LEFT_DOWN, x + doors[i].x-1, y + doors[i].y - 1);
 				} else if (doors[i].x === room.width - 1) {
-					//this.groundLayer.putTilesAt(TILES.DOOR.RIGHT, x + doors[i].x, y + doors[i].y - 1);
+					this.wallLayer.putTilesAt(TILES.DOOR.RIGHT_UP, x + doors[i].x-2, y + doors[i].y-1);
+					this.groundLayer.putTilesAt(TILES.DOOR.FLOOR, x + doors[i].x-1, y + doors[i].y+1);
+					this.wallLayer.putTilesAt(TILES.DOOR.RIGHT_DOWN, x + doors[i].x-1, y + doors[i].y-1);
 				}
 			}
 		});
@@ -84,7 +90,7 @@ export default class DungeonScene extends Phaser.Scene {
 		// Place the stairs
 		this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY);
 
-		otherRooms.forEach((room) => {
+		/*otherRooms.forEach((room) => {
 			const rand = Math.random();
 			if (rand <= 0.25) {
 				// 25% chance of chest
@@ -106,13 +112,14 @@ export default class DungeonScene extends Phaser.Scene {
 					this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
 				}
 			}
-		});
+		});*/
 
 
 		/* Collisions */
-		this.groundLayer.setCollisionByExclusion([-1, 185, 188]);
-		this.wallLayer.setCollisionByExclusion([-1, 185, 188]);
-		this.stuffLayer.setCollisionByExclusion([-1, 185, 188]);
+		const collisionArray = [-1, 185, 188, 84, 83]
+		//this.groundLayer.setCollisionByExclusion(collisionArray);
+		//this.wallLayer.setCollisionByExclusion(collisionArray);
+		//this.stuffLayer.setCollisionByExclusion(collisionArray);
 
 		this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
 			this.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
@@ -133,8 +140,8 @@ export default class DungeonScene extends Phaser.Scene {
 		this.player = new Player(this, x, y);
 
 		/* Collision */
-		//this.physics.add.collider(this.player.sprite, this.groundLayer);
-		//this.physics.add.collider(this.player.sprite, this.wallLayer);
+		this.physics.add.collider(this.player.sprite, this.groundLayer);
+		this.physics.add.collider(this.player.sprite, this.wallLayer);
 		this.physics.add.collider(this.player.sprite, this.stuffLayer);
 
 		/* Phaser default camera */
