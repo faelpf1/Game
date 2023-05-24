@@ -1,6 +1,5 @@
 import Player from "./player.js";
 import TILES from "./tile-mapping.js";
-//import { Dungeon } from "../dungeon/dungeon.js";
 
 export default class DungeonScene extends Phaser.Scene {
     constructor() {
