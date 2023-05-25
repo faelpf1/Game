@@ -10,6 +10,7 @@ export default class DungeonScene extends Phaser.Scene {
     preload() {
         this.load.image('tiles', './assets/tileMap/tileMapDungeon.png');
         this.load.spritesheet("characters", "./assets/player/charTMP.png", { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
+        
     }
 
     create() {
@@ -83,6 +84,7 @@ export default class DungeonScene extends Phaser.Scene {
         });
 
         const rooms = this.dungeon.rooms.slice();
+        console.log(rooms)
         const startRoom = rooms.shift();
         const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
         const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
@@ -116,8 +118,8 @@ export default class DungeonScene extends Phaser.Scene {
 
 
         /* Collisions */
-        const collisionArray = [-1, 185, 188, 84, 83]
-        //this.groundLayer.setCollisionByExclusion(collisionArray);
+        // const collisionArray = [-1, 185, 188, 84, 83, 116, 115, 19, 20,50, 51]
+        // this.groundLayer.setCollisionByExclusion(collisionArray);
         //this.wallLayer.setCollisionByExclusion(collisionArray);
         //this.stuffLayer.setCollisionByExclusion(collisionArray);
 
@@ -140,9 +142,9 @@ export default class DungeonScene extends Phaser.Scene {
         this.player = new Player(this, x, y);
 
         /* Collision */
-        this.physics.add.collider(this.player.sprite, this.groundLayer);
-        this.physics.add.collider(this.player.sprite, this.wallLayer);
-        this.physics.add.collider(this.player.sprite, this.stuffLayer);
+        // this.physics.add.collider(this.player.sprite, this.groundLayer);
+        //this.physics.add.collider(this.player.sprite, this.wallLayer);
+        //this.physics.add.collider(this.player.sprite, this.stuffLayer);
 
         /* Phaser default camera */
         const camera = this.cameras.main;
