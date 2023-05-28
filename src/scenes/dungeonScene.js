@@ -11,9 +11,8 @@ export default class DungeonScene extends Phaser.Scene {
 
     preload() {
         this.load.image('tiles', './assets/tileMap/tileMapDungeon.png');
-        this.load.spritesheet("characters", "./assets/player/charTMP.png", { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
-        this.load.spritesheet('skeleton','./assets/enemy/Skeleton.png', { frameWidth: 48, frameHeight: 48, margin: 0, spacing: 0 } );
-        this.load.spritesheet('skull','./assets/enemy/Skull.png', { frameWidth: 48, frameHeight: 48, margin: 0, spacing: 0 } );
+        this.load.spritesheet('characters', './assets/player/charTMP.png', { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
+        this.load.spritesheet('enemies','assets/enemy/teste.png', { frameWidth: 16, frameHeight: 16, margin: 0, spacing: 0 } );
     }
 
     create() {
