@@ -161,7 +161,7 @@ export default class DungeonScene extends Phaser.Scene {
         this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
 
 
-        const skeleton = this.add.skeleton(x, y);
+        const skeleton = this.add.skeleton(x-100, y);
         const skull = this.add.skull(x+100, y);
 
     }

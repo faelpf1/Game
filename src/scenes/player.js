@@ -1,6 +1,6 @@
 export default class Player {
-    constructor(scene, x, y) {
-        this.scene = scene;
+    constructor(scene, x, y) 
+    {
         const anims = scene.anims;
 
         anims.create({
@@ -24,11 +24,13 @@ export default class Player {
         this.keys = scene.input.keyboard.createCursorKeys();
     }
 
-    freeze() {
+    freeze() 
+    {
         this.sprite.body.moves = false;
     }
 
-    update() {
+    update() 
+    {
         const keys = this.keys;
         const sprite = this.sprite;
         const speed = 300;
@@ -70,7 +72,8 @@ export default class Player {
         }
     }
 
-    destroy() {
+    destroy() 
+    {
         this.sprite.destroy();
     }
 }

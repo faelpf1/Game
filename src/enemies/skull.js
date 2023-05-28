@@ -16,7 +16,8 @@ export default class Skull extends Phaser.GameObjects.Sprite
 	}
 }
 
-Phaser.GameObjects.GameObjectFactory.register('skull', function (x, y) {
+Phaser.GameObjects.GameObjectFactory.register('skull', function (x, y) 
+{
 	const skull = new Skull(this.scene, x, y)
     this.displayList.add(skull)
     this.updateList.add(skull)
