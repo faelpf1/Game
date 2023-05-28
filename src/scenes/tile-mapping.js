@@ -1,7 +1,5 @@
-// Our custom tile mapping with:
-// - Single index for putTileAt
-// - Array of weights for weightedRandomize
-// - Array or 2D array for putTilesAt
+// - Single index, array or 2D array : putTileAt
+// - Array of weights: weightedRandomize
 const TILE_MAPPING = {
 	BLANK: 117,
 	WALL: {
@@ -24,10 +22,7 @@ const TILE_MAPPING = {
 		RIGHT: [{ index: 48, weight: 4, collides: true}],
 	},
 	FLOOR: [{ index: 185, weight: 10 }, { index: 188, weight: 1 }],
-	POT: [
-		{ index: 364, weight: 1 },
-		{ index: [396, 428], weight: 1 },
-	],
+	POT: [{ index: [364, 396, 428], weight: 1 }],
 	DOOR: {
 		TOP_UP: [84, 185, 185, 83],
 		TOP_DOWN: [116, 185, 185, 115],
@@ -41,11 +36,7 @@ const TILE_MAPPING = {
 	},
 	CHEST: 366,
 	STAIRS: 242,
-	TOWER: [
-		[365],
-		[397],
-		[429]
-	],
+	TOWER: [[365], [397], [429]],
 };
 
 export default TILE_MAPPING;

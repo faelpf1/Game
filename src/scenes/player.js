@@ -4,8 +4,6 @@ export default class Player {
 
         const anims = scene.anims;
 
-
-
         anims.create({
             key: "player-walk",
             frames: anims.generateFrameNumbers("characters", { start: 46, end: 49 }),
