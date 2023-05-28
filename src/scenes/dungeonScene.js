@@ -1,5 +1,7 @@
 import Player from "./player.js";
 import TILES from "./tile-mapping.js";
+import Skeleton from '../enemies/skeleton.js';
+import Skull from '../enemies/skull.js';
 
 export default class DungeonScene extends Phaser.Scene {
     constructor() {
@@ -10,7 +12,8 @@ export default class DungeonScene extends Phaser.Scene {
     preload() {
         this.load.image('tiles', './assets/tileMap/tileMapDungeon.png');
         this.load.spritesheet("characters", "./assets/player/charTMP.png", { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
-        
+        this.load.spritesheet('skeleton','./assets/enemy/Skeleton.png', { frameWidth: 48, frameHeight: 48, margin: 0, spacing: 0 } );
+        this.load.spritesheet('skull','./assets/enemy/Skull.png', { frameWidth: 48, frameHeight: 48, margin: 0, spacing: 0 } );
     }
 
     create() {
@@ -142,8 +145,8 @@ export default class DungeonScene extends Phaser.Scene {
         this.player = new Player(this, x, y);
 
       	//this.groundLayer.setCollisionByProperty({ collides: true }); 
-				this.wallLayer.setCollisionByProperty({ collides: true }); 
-			/* Collision */
+		this.wallLayer.setCollisionByProperty({ collides: true }); 
+		/* Collision */
         this.physics.add.collider(this.player.sprite, this.groundLayer);
         this.physics.add.collider(this.player.sprite, this.wallLayer);
         this.physics.add.collider(this.player.sprite, this.stuffLayer);
@@ -155,7 +158,14 @@ export default class DungeonScene extends Phaser.Scene {
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
         camera.startFollow(this.player.sprite);
 
-        this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 20, y: 10 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
+        this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
+
+
+        //const skeleton = new Enemy(this, x, y);
+        //this.add.existing(skeleton);
+        const skeleton = this.add.skeleton(x, y);
+        const skull = this.add.skull(x+100, y);
+
     }
 
     update(time, delta) {

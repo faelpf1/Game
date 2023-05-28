@@ -1,24 +1,23 @@
 export default class Player {
     constructor(scene, x, y) {
         this.scene = scene;
-
         const anims = scene.anims;
 
         anims.create({
             key: "player-walk",
-            frames: anims.generateFrameNumbers("characters", { start: 46, end: 49 }),
+            frames: anims.generateFrameNumbers('characters', { start: 46, end: 49 }),
             frameRate: 8,
             repeat: -1,
         });
 
         anims.create({
             key: "player-walk-back",
-            frames: anims.generateFrameNumbers("characters", { start: 65, end: 68 }),
+            frames: anims.generateFrameNumbers('characters', { start: 65, end: 68 }),
             frameRate: 8,
             repeat: -1,
         });
 
-        this.sprite = scene.physics.add.sprite(x, y, "characters", 0).setSize(22, 33).setOffset(23, 27);
+        this.sprite = scene.physics.add.sprite(x, y, 'characters', 0).setSize(22, 33).setOffset(23, 27);
 
         this.sprite.anims.play("player-walk-back");
 
@@ -66,8 +65,8 @@ export default class Player {
             sprite.anims.stop();
 
             // If we were moving & now we're not, then pick a single idle frame to use
-            if (prevVelocity.y < 0) sprite.setTexture("characters", 65);
-            else sprite.setTexture("characters", 46);
+            if (prevVelocity.y < 0) sprite.setTexture('characters', 65);
+            else sprite.setTexture('characters', 46);
         }
     }
 
