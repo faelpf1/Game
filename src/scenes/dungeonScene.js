@@ -10,7 +10,6 @@ export default class DungeonScene extends Phaser.Scene {
     preload() {
         this.load.image('tiles', './assets/tileMap/tileMapDungeon.png');
         this.load.spritesheet("characters", "./assets/player/charTMP.png", { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
-        
     }
 
     create() {
@@ -29,6 +28,7 @@ export default class DungeonScene extends Phaser.Scene {
 
         const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
         const tileset = map.addTilesetImage("tiles", null, 48, 48, 0, 0);  /* tile height and tile width, tile margin, tile spacing */
+        
         this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK); /* Layer for floors */
         this.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
         this.stuffLayer = map.createBlankLayer("Stuff", tileset); /* Layer for stuffs or objects */
