@@ -118,10 +118,10 @@ export default class DungeonScene extends Phaser.Scene {
 
 
         /* Collisions */
-        // const collisionArray = [-1, 185, 188, 84, 83, 116, 115, 19, 20,50, 51]
-        // this.groundLayer.setCollisionByExclusion(collisionArray);
-        //this.wallLayer.setCollisionByExclusion(collisionArray);
-        //this.stuffLayer.setCollisionByExclusion(collisionArray);
+        const collisionArray = [-1, 18, 16,0,117, 185, 188]
+        this.groundLayer.setCollisionByExclusion(collisionArray);
+        this.wallLayer.setCollisionByExclusion(collisionArray);
+        this.stuffLayer.setCollisionByExclusion(collisionArray);
 
         this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
             this.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
@@ -141,10 +141,12 @@ export default class DungeonScene extends Phaser.Scene {
         const y = map.tileToWorldY(playerRoom.centerY);
         this.player = new Player(this, x, y);
 
-        /* Collision */
-        // this.physics.add.collider(this.player.sprite, this.groundLayer);
-        //this.physics.add.collider(this.player.sprite, this.wallLayer);
-        //this.physics.add.collider(this.player.sprite, this.stuffLayer);
+      	//this.groundLayer.setCollisionByProperty({ collides: true }); 
+				this.wallLayer.setCollisionByProperty({ collides: true }); 
+			/* Collision */
+        this.physics.add.collider(this.player.sprite, this.groundLayer);
+        this.physics.add.collider(this.player.sprite, this.wallLayer);
+        this.physics.add.collider(this.player.sprite, this.stuffLayer);
 
         /* Phaser default camera */
         const camera = this.cameras.main;
