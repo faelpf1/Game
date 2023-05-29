@@ -24,45 +24,16 @@ export default class DungeonScene extends Phaser.Scene
         //console.log(rooms)
         const startRoom = rooms.shift();
         const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
-        const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
-
-        /*otherRooms.forEach((room) => {
-            const rand = Math.random();
-            if (rand <= 0.25) {
-                // 25% chance of chest
-                this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
-            } else if (rand <= 0.5) {
-                // 50% chance of a pot anywhere in the room... except don't block a door!
-                const x = Phaser.Math.Between(room.left + 2, room.right - 2);
-                const y = Phaser.Math.Between(room.top + 2, room.bottom - 2);
-                this.stuffLayer.weightedRandomize(x, y, 1, 1, TILES.POT);
-            } else {
-                // 25% of either 2 or 4 towers, depending on the room size
-                if (room.height >= 9) {
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY + 1);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY + 1);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 2);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 2);
-                } else {
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 1);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
-                }
-            }
-        });*/
         
-        this.layerCollission(); /* layers collisions */
-
+        //this.generateStuffs(rooms);
+        
         this.dungeonStageChange(endRoom); /* Stairs config */ 
         
-        this.placePlayer(startRoom, map); /* Place the player in the first room */
-
-        this.playerCollision(); /* Player collision with layers */
+        this.playerConfig(startRoom, map); /* Place the player in the first room */
  
-        this.cameraConfig(map); /* Camera setup */      
-
         this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
 
-        this.placeEnemies(startRoom, map); /* Enemies placement */
+        this.enemiesConfig(startRoom, map); /* Enemies placement */
         
     }
 
@@ -79,6 +50,9 @@ export default class DungeonScene extends Phaser.Scene
 
         //this.tilemapVisibility.setActiveRoom(playerRoom);
     }
+
+
+    /* Dungeon Configs */
 
     dungeonConfig()
     {
@@ -148,6 +122,17 @@ export default class DungeonScene extends Phaser.Scene
                 }
             }
         });
+        this.layerCollission(); /* Layers collisions */
+    }
+
+    layerCollission()
+    {
+        const collisionArray = [-1, 18, 16,0,117, 185, 188]
+        this.groundLayer.setCollisionByExclusion(collisionArray);
+        this.wallLayer.setCollisionByExclusion(collisionArray);
+        this.stuffLayer.setCollisionByExclusion(collisionArray);
+        //this.groundLayer.setCollisionByProperty({ collides: true }); 
+		this.wallLayer.setCollisionByProperty({ collides: true }); 
     }
 
     dungeonStageChange(endRoom)
@@ -166,29 +151,51 @@ export default class DungeonScene extends Phaser.Scene
         });
     }
 
-    layerCollission()
+    generateStuffs(rooms)
     {
-        const collisionArray = [-1, 18, 16,0,117, 185, 188]
-        this.groundLayer.setCollisionByExclusion(collisionArray);
-        this.wallLayer.setCollisionByExclusion(collisionArray);
-        this.stuffLayer.setCollisionByExclusion(collisionArray);
-        //this.groundLayer.setCollisionByProperty({ collides: true }); 
-		this.wallLayer.setCollisionByProperty({ collides: true }); 
+        const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
+        otherRooms.forEach((room) => {
+            const rand = Math.random();
+            if (rand <= 0.25) {
+                // 25% chance of chest
+                this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
+            } else if (rand <= 0.5) {
+                // 50% chance of a pot anywhere in the room... except don't block a door!
+                const x = Phaser.Math.Between(room.left + 2, room.right - 2);
+                const y = Phaser.Math.Between(room.top + 2, room.bottom - 2);
+                this.stuffLayer.weightedRandomize(x, y, 1, 1, TILES.POT);
+            } else {
+                // 25% of either 2 or 4 towers, depending on the room size
+                if (room.height >= 9) {
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY + 1);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY + 1);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 2);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 2);
+                } else {
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 1);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
+                }
+            }
+        });
     }
 
-    placePlayer(startRoom, map)
+
+    /* Player Configs */
+    playerConfig(startRoom, map)
     {
         const playerRoom = startRoom;
         const x = map.tileToWorldX(playerRoom.centerX);
         const y = map.tileToWorldY(playerRoom.centerY);
-        this.player = new Player(this, x, y);        
+        this.player = new Player(this, x, y);       
+        this.playerCollision(); /* Player collision with layers */ 
+        this.cameraConfig(map); /* Camera setup */ 
     }
 
     playerCollision()
     {
         this.physics.add.collider(this.player.sprite, this.groundLayer);
         this.physics.add.collider(this.player.sprite, this.wallLayer);
-        this.physics.add.collider(this.player.sprite, this.stuffLayer);
+        this.physics.add.collider(this.player.sprite, this.stuffLayer);  
     }
 
     cameraConfig(map)
@@ -200,7 +207,9 @@ export default class DungeonScene extends Phaser.Scene
         camera.startFollow(this.player.sprite);
     }
 
-    placeEnemies(startRoom, map)
+
+    /* Enemies Configs */
+    enemiesConfig(startRoom, map)
     {
         const playerRoom = startRoom;
         const x = map.tileToWorldX(playerRoom.centerX);
