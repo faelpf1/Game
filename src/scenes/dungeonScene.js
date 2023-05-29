@@ -11,7 +11,8 @@ export default class DungeonScene extends Phaser.Scene
         this.level = 0;
     }
 
-    create() {
+    create() 
+    {
         this.level++;
         this.hasPlayerReachedStairs = false;
 
@@ -33,8 +34,7 @@ export default class DungeonScene extends Phaser.Scene
  
         this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
 
-        this.enemiesConfig(startRoom, map); /* Enemies placement */
-        
+        this.enemiesConfig(startRoom, map); /* Enemies placement */     
     }
 
     update(time, delta) 
