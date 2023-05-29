@@ -7,7 +7,6 @@ export default Phaser.GameObjects.GameObjectFactory.register('skeleton', functio
 	const skeleton = new Enemies(this.scene, x, y, frameStart, frameEnd);
     this.displayList.add(skeleton);
     this.updateList.add(skeleton);
-	skeleton.scaleX*=3;
-	skeleton.scaleY*=3;
+	skeleton.setScale(3);
     return skeleton;
 })

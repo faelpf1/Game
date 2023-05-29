@@ -7,7 +7,6 @@ export default Phaser.GameObjects.GameObjectFactory.register('skull', function (
 	const skull = new Enemies(this.scene, x, y, frameStart, frameEnd);
     this.displayList.add(skull);
     this.updateList.add(skull);
-	skull.scaleX*=3;
-	skull.scaleY*=3;
+	skull.setScale(3);
     return skull;
 })
