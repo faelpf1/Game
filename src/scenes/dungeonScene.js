@@ -15,6 +15,73 @@ export default class DungeonScene extends Phaser.Scene
         this.level++;
         this.hasPlayerReachedStairs = false;
 
+        this.dungeonConfig();
+        const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
+        
+        this.generateTilesMap(map); /* Generate tiles on map */
+        
+        const rooms = this.dungeon.rooms.slice();
+        //console.log(rooms)
+        const startRoom = rooms.shift();
+        const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
+        const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
+
+        /*otherRooms.forEach((room) => {
+            const rand = Math.random();
+            if (rand <= 0.25) {
+                // 25% chance of chest
+                this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
+            } else if (rand <= 0.5) {
+                // 50% chance of a pot anywhere in the room... except don't block a door!
+                const x = Phaser.Math.Between(room.left + 2, room.right - 2);
+                const y = Phaser.Math.Between(room.top + 2, room.bottom - 2);
+                this.stuffLayer.weightedRandomize(x, y, 1, 1, TILES.POT);
+            } else {
+                // 25% of either 2 or 4 towers, depending on the room size
+                if (room.height >= 9) {
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY + 1);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY + 1);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 2);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 2);
+                } else {
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 1);
+                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
+                }
+            }
+        });*/
+        
+        this.layerCollission(); /* layers collisions */
+
+        this.dungeonStageChange(endRoom); /* Stairs config */ 
+        
+        this.placePlayer(startRoom, map); /* Place the player in the first room */
+
+        this.playerCollision(); /* Player collision with layers */
+ 
+        this.cameraConfig(map); /* Camera setup */      
+
+        this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
+
+        this.placeEnemies(startRoom, map); /* Enemies placement */
+        
+    }
+
+    update(time, delta) 
+    {
+        if (this.hasPlayerReachedStairs) return;
+        this.player.update();
+
+        // Find the player's room using another helper method from the dungeon that converts from
+        // dungeon XY (in grid units) to the corresponding room object
+        //const playerTileX = this.groundLayer.worldToTileX(this.player.sprite.x);
+        //const playerTileY = this.groundLayer.worldToTileY(this.player.sprite.y);
+        //const playerRoom = this.dungeon.getRoomAt(playerTileX, playerTileY);
+
+        //this.tilemapVisibility.setActiveRoom(playerRoom);
+    }
+
+    dungeonConfig()
+    {
         this.dungeon = new Dungeon({
             width: 50,
             height: 50,
@@ -24,16 +91,15 @@ export default class DungeonScene extends Phaser.Scene
                 height: { min: 11, max: 21, onlyOdd: true },
             },
         });
+    }
 
-        const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
+    generateTilesMap(map)
+    {
         const tileset = map.addTilesetImage("tiles", null, 48, 48, 0, 0);  /* tile height and tile width, tile margin, tile spacing */
         this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK); /* Layer for floors */
         this.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
         this.stuffLayer = map.createBlankLayer("Stuff", tileset); /* Layer for stuffs or objects */
 
-
-        
-        /* Generate tiles on map */
         this.dungeon.rooms.forEach((room) => {
             const { x, y, width, height, left, right, top, bottom } = room;
 
@@ -53,8 +119,6 @@ export default class DungeonScene extends Phaser.Scene
             this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_UP, right - 2, bottom - 2);
             this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_DOWN, right - 2, bottom - 1);
             
-            
-
             /* Fill the walls with mostly clean tiles */
             this.wallLayer.weightedRandomize(TILES.WALL.TOP_UP, left + 1, top - 1, width - 4, 1);
             this.wallLayer.weightedRandomize(TILES.WALL.TOP_DOWN, left + 1, top, width - 4, 1);
@@ -84,44 +148,11 @@ export default class DungeonScene extends Phaser.Scene
                 }
             }
         });
+    }
 
-        const rooms = this.dungeon.rooms.slice();
-        console.log(rooms)
-        const startRoom = rooms.shift();
-        const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
-        const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
-
-        // Place the stairs
-        this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY);
-
-        /*otherRooms.forEach((room) => {
-            const rand = Math.random();
-            if (rand <= 0.25) {
-                // 25% chance of chest
-                this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
-            } else if (rand <= 0.5) {
-                // 50% chance of a pot anywhere in the room... except don't block a door!
-                const x = Phaser.Math.Between(room.left + 2, room.right - 2);
-                const y = Phaser.Math.Between(room.top + 2, room.bottom - 2);
-                this.stuffLayer.weightedRandomize(x, y, 1, 1, TILES.POT);
-            } else {
-                // 25% of either 2 or 4 towers, depending on the room size
-                if (room.height >= 9) {
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY + 1);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY + 1);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 2);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 2);
-                } else {
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 1);
-                    this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
-                }
-            }
-        });*/
-
-
-        
-        this.layerCollission(); /* layers collisions */
-        
+    dungeonStageChange(endRoom)
+    {
+        this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY); /* Place stairs in the stage */
         this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
             this.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
             this.hasPlayerReachedStairs = true;
@@ -133,18 +164,6 @@ export default class DungeonScene extends Phaser.Scene
                 this.scene.restart();
             });
         });
-
-        this.placePlayer(startRoom, map); /* Place the player in the first room */
-
-        this.playerCollision(); /* Player collision with layers */
- 
-        this.cameraConfig(map); /* Camera setup */      
-
-        this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
-
-        this.placeEnemies(startRoom, map); /* Enemies placement */
-        
-
     }
 
     layerCollission()
@@ -155,20 +174,6 @@ export default class DungeonScene extends Phaser.Scene
         this.stuffLayer.setCollisionByExclusion(collisionArray);
         //this.groundLayer.setCollisionByProperty({ collides: true }); 
 		this.wallLayer.setCollisionByProperty({ collides: true }); 
-    }
-
-    update(time, delta) 
-    {
-        if (this.hasPlayerReachedStairs) return;
-        this.player.update();
-
-        // Find the player's room using another helper method from the dungeon that converts from
-        // dungeon XY (in grid units) to the corresponding room object
-        //const playerTileX = this.groundLayer.worldToTileX(this.player.sprite.x);
-        //const playerTileY = this.groundLayer.worldToTileY(this.player.sprite.y);
-        //const playerRoom = this.dungeon.getRoomAt(playerTileX, playerTileY);
-
-        //this.tilemapVisibility.setActiveRoom(playerRoom);
     }
 
     placePlayer(startRoom, map)
