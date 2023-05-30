@@ -3,22 +3,57 @@ import TILES from "./tile-mapping.js";
 import Skeleton from '../enemies/skeleton.js';
 import Skull from '../enemies/skull.js';
 
-export default class DungeonScene extends Phaser.Scene {
-    constructor() {
-        super();
+export default class DungeonScene extends Phaser.Scene 
+{
+    constructor() 
+    {
+        super({key: 'DungeonScene'});
         this.level = 0;
     }
 
-    preload() {
-        this.load.image('tiles', './assets/tileMap/tileMapDungeon.png');
-        this.load.spritesheet('characters', './assets/player/charTMP.png', { frameWidth: 64, frameHeight: 64, margin: 1, spacing: 2 });
-        //this.load.spritesheet('enemies','./assets/enemy/teste.png', { frameWidth: 16, frameHeight: 16, margin: 0, spacing: 0 } );
-    }
-
-    create() {
+    create() 
+    {
         this.level++;
         this.hasPlayerReachedStairs = false;
 
+        this.dungeonConfig();
+        const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
+        this.generateTilesMap(map); /* Generate tiles on map */
+        
+        const rooms = this.dungeon.rooms.slice();
+        const startRoom = rooms.shift();
+        const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
+        
+        //this.generateStuffs(rooms);
+        
+        this.dungeonStageChange(endRoom); /* Stairs config */ 
+        
+        this.playerConfig(startRoom, map); /* Place the player in the first room */
+ 
+        this.enemiesConfig(startRoom, map); /* Enemies placement */    
+        
+        this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
+    }
+
+    update(time, delta) 
+    {
+        if (this.hasPlayerReachedStairs) return;
+        this.player.update();
+
+        // Find the player's room using another helper method from the dungeon that converts from
+        // dungeon XY (in grid units) to the corresponding room object
+        //const playerTileX = this.groundLayer.worldToTileX(this.player.sprite.x);
+        //const playerTileY = this.groundLayer.worldToTileY(this.player.sprite.y);
+        //const playerRoom = this.dungeon.getRoomAt(playerTileX, playerTileY);
+
+        //this.tilemapVisibility.setActiveRoom(playerRoom);
+    }
+
+
+    /* Dungeon Configs */
+
+    dungeonConfig()
+    {
         this.dungeon = new Dungeon({
             width: 50,
             height: 50,
@@ -28,14 +63,15 @@ export default class DungeonScene extends Phaser.Scene {
                 height: { min: 11, max: 21, onlyOdd: true },
             },
         });
+    }
 
-        const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
+    generateTilesMap(map)
+    {
         const tileset = map.addTilesetImage("tiles", null, 48, 48, 0, 0);  /* tile height and tile width, tile margin, tile spacing */
         this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK); /* Layer for floors */
         this.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
         this.stuffLayer = map.createBlankLayer("Stuff", tileset); /* Layer for stuffs or objects */
 
-        /* Generate tiles on map */
         this.dungeon.rooms.forEach((room) => {
             const { x, y, width, height, left, right, top, bottom } = room;
 
@@ -54,7 +90,7 @@ export default class DungeonScene extends Phaser.Scene {
 
             this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_UP, right - 2, bottom - 2);
             this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_DOWN, right - 2, bottom - 1);
-
+            
             /* Fill the walls with mostly clean tiles */
             this.wallLayer.weightedRandomize(TILES.WALL.TOP_UP, left + 1, top - 1, width - 4, 1);
             this.wallLayer.weightedRandomize(TILES.WALL.TOP_DOWN, left + 1, top, width - 4, 1);
@@ -84,17 +120,39 @@ export default class DungeonScene extends Phaser.Scene {
                 }
             }
         });
+        this.layerCollission(); /* Layers collisions */
+    }
 
-        const rooms = this.dungeon.rooms.slice();
-        console.log(rooms)
-        const startRoom = rooms.shift();
-        const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
+    layerCollission()
+    {
+        const collisionArray = [-1, 18, 16,0,117, 185, 188]
+        this.groundLayer.setCollisionByExclusion(collisionArray);
+        this.wallLayer.setCollisionByExclusion(collisionArray);
+        this.stuffLayer.setCollisionByExclusion(collisionArray);
+        //this.groundLayer.setCollisionByProperty({ collides: true }); 
+		this.wallLayer.setCollisionByProperty({ collides: true }); 
+    }
+
+    dungeonStageChange(endRoom)
+    {
+        this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY); /* Place stairs in the stage */
+        this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
+            this.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
+            this.hasPlayerReachedStairs = true;
+            this.player.freeze();
+            const cam = this.cameras.main;
+            cam.fade(250, 0, 0, 0);
+            cam.once("camerafadeoutcomplete", () => {
+                this.player.destroy();
+                this.scene.restart();
+            });
+        });
+    }
+
+    generateStuffs(rooms)
+    {
         const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
-
-        // Place the stairs
-        this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY);
-
-        /*otherRooms.forEach((room) => {
+        otherRooms.forEach((room) => {
             const rand = Math.random();
             if (rand <= 0.25) {
                 // 25% chance of chest
@@ -116,66 +174,45 @@ export default class DungeonScene extends Phaser.Scene {
                     this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
                 }
             }
-        });*/
-
-
-        /* Collisions */
-        const collisionArray = [-1, 18, 16,0,117, 185, 188]
-        this.groundLayer.setCollisionByExclusion(collisionArray);
-        this.wallLayer.setCollisionByExclusion(collisionArray);
-        this.stuffLayer.setCollisionByExclusion(collisionArray);
-
-        this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
-            this.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
-            this.hasPlayerReachedStairs = true;
-            this.player.freeze();
-            const cam = this.cameras.main;
-            cam.fade(250, 0, 0, 0);
-            cam.once("camerafadeoutcomplete", () => {
-                this.player.destroy();
-                this.scene.restart();
-            });
         });
+    }
 
-        // Place the player in the first room
+
+    /* Player Configs */
+    playerConfig(startRoom, map)
+    {
         const playerRoom = startRoom;
         const x = map.tileToWorldX(playerRoom.centerX);
         const y = map.tileToWorldY(playerRoom.centerY);
-        this.player = new Player(this, x, y);
+        this.player = new Player(this, x, y);       
+        this.playerCollision(); /* Player collision with layers */ 
+        this.cameraConfig(map); /* Camera setup */ 
+    }
 
-      	//this.groundLayer.setCollisionByProperty({ collides: true }); 
-			//	this.wallLayer.setCollisionByProperty({ collides: true }); 
-		/* Collision */
+    playerCollision()
+    {
         this.physics.add.collider(this.player.sprite, this.groundLayer);
         this.physics.add.collider(this.player.sprite, this.wallLayer);
-        this.physics.add.collider(this.player.sprite, this.stuffLayer);
+        this.physics.add.collider(this.player.sprite, this.stuffLayer);  
+    }
 
-        /* Phaser default camera */
-        const camera = this.cameras.main;
-
-        // Constrain the camera so that it isn't allowed to move outside the width/height of tilemap
-        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+    cameraConfig(map)
+    {
+        const camera = this.cameras.main; /* Phaser default camera */
+        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels); /* Constrain the camera on tileMap */
         camera.startFollow(this.player.sprite);
-
-        this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
-
-
-        //const skeleton = this.add.skeleton(x-100, y);
-        //const skull = this.add.skull(x+100, y);
-
     }
 
-    update(time, delta) {
-        if (this.hasPlayerReachedStairs) return;
 
-        this.player.update();
-
-        // Find the player's room using another helper method from the dungeon that converts from
-        // dungeon XY (in grid units) to the corresponding room object
-        //const playerTileX = this.groundLayer.worldToTileX(this.player.sprite.x);
-        //const playerTileY = this.groundLayer.worldToTileY(this.player.sprite.y);
-        //const playerRoom = this.dungeon.getRoomAt(playerTileX, playerTileY);
-
-        //this.tilemapVisibility.setActiveRoom(playerRoom);
+    /* Enemies Configs */
+    enemiesConfig(startRoom, map)
+    {
+        const playerRoom = startRoom;
+        const x = map.tileToWorldX(playerRoom.centerX);
+        const y = map.tileToWorldY(playerRoom.centerY);
+        const skeleton = this.add.skeleton(x-100, y);
+        const skull = this.add.skull(x+100, y);
     }
+
 }
+
