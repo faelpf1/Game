@@ -18,11 +18,9 @@ export default class DungeonScene extends Phaser.Scene
 
         this.dungeonConfig();
         const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
-        
         this.generateTilesMap(map); /* Generate tiles on map */
         
         const rooms = this.dungeon.rooms.slice();
-        //console.log(rooms)
         const startRoom = rooms.shift();
         const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
         
@@ -32,9 +30,9 @@ export default class DungeonScene extends Phaser.Scene
         
         this.playerConfig(startRoom, map); /* Place the player in the first room */
  
+        this.enemiesConfig(startRoom, map); /* Enemies placement */    
+        
         this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
-
-        this.enemiesConfig(startRoom, map); /* Enemies placement */     
     }
 
     update(time, delta) 
@@ -200,10 +198,8 @@ export default class DungeonScene extends Phaser.Scene
 
     cameraConfig(map)
     {
-        /* Phaser default camera */
-        const camera = this.cameras.main;
-        // Constrain the camera so that it isn't allowed to move outside the width/height of tilemap
-        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        const camera = this.cameras.main; /* Phaser default camera */
+        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels); /* Constrain the camera on tileMap */
         camera.startFollow(this.player.sprite);
     }
 
