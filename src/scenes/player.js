@@ -1,8 +1,23 @@
-export default class Player {
+export default class Player extends Phaser.GameObjects.Sprite {
+
     constructor(scene, x, y) 
     {
+        super(scene, x, y, 'characters');
         const anims = scene.anims;
+        
+        this.playerAnims(anims);
 
+        this.keys = scene.input.keyboard.createCursorKeys();
+
+        this.sprite = scene.physics.add.sprite(x, y, 'characters', 0).setSize(22, 33).setOffset(23, 27);
+
+        //this.sprite.setScale(3);
+
+        //this.sprite.anims.play("player-walk-back");
+    }
+
+    playerAnims(anims)
+    {
         anims.create({
             key: "player-walk",
             frames: anims.generateFrameNumbers('characters', { start: 46, end: 49 }),
@@ -16,19 +31,9 @@ export default class Player {
             frameRate: 8,
             repeat: -1,
         });
-
-        this.sprite = scene.physics.add.sprite(x, y, 'characters', 0).setSize(22, 33).setOffset(23, 27);
-
-        this.sprite.anims.play("player-walk-back");
-
-        this.keys = scene.input.keyboard.createCursorKeys();
     }
 
-    freeze() 
-    {
-        this.sprite.body.moves = false;
-    }
-
+    
     update() 
     {
         const keys = this.keys;
@@ -72,8 +77,14 @@ export default class Player {
         }
     }
 
+    freeze() 
+    {
+        this.sprite.body.moves = false;
+    }
+
     destroy() 
     {
         this.sprite.destroy();
     }
+    
 }

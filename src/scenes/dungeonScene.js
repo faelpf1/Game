@@ -3,11 +3,9 @@ import TILES from "./tile-mapping.js";
 import Skeleton from '../enemies/skeleton.js';
 import Skull from '../enemies/skull.js';
 
-export default class DungeonScene extends Phaser.Scene 
-{
-    constructor() 
-    {
-        super({key: 'DungeonScene'});
+export default class DungeonScene extends Phaser.Scene {
+    constructor() {
+        super({ key: 'DungeonScene' });
         this.level = 0;
     }
 
@@ -18,24 +16,23 @@ export default class DungeonScene extends Phaser.Scene
         this.dungeonConfig();
         const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
         this.generateTilesMap(map); /* Generate tiles on map */
-        
+
         const rooms = this.dungeon.rooms.slice();
         const startRoom = rooms.shift();
         const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
-        
+
         //this.generateStuffs(rooms);
-        
-        this.dungeonStageChange(endRoom); /* Stairs config */ 
-        
+
+        this.dungeonStageChange(endRoom); /* Stairs config */
+
         this.playerConfig(startRoom, map); /* Place the player in the first room */
- 
-        this.enemiesConfig(startRoom, map); /* Enemies placement */    
-        
+
+        this.enemiesConfig(startRoom, map); /* Enemies placement */
+
         this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
     }
 
-    update(time, delta) 
-    {
+    update(time, delta) {
         if (this.hasPlayerReachedStairs) return;
         this.player.update();
 
@@ -51,8 +48,7 @@ export default class DungeonScene extends Phaser.Scene
 
     /* Dungeon Configs */
 
-    dungeonConfig()
-    {
+    dungeonConfig() {
         this.dungeon = new Dungeon({
             width: 50,
             height: 50,
@@ -64,8 +60,7 @@ export default class DungeonScene extends Phaser.Scene
         });
     }
 
-    generateTilesMap(map)
-    {
+    generateTilesMap(map) {
         const tileset = map.addTilesetImage("tiles", null, 48, 48, 0, 0);  /* tile height and tile width, tile margin, tile spacing */
         this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK); /* Layer for floors */
         this.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
@@ -89,7 +84,7 @@ export default class DungeonScene extends Phaser.Scene
 
             this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_UP, right - 2, bottom - 2);
             this.wallLayer.putTileAt(TILES.WALL.BOTTOM_RIGHT_DOWN, right - 2, bottom - 1);
-            
+
             /* Fill the walls with mostly clean tiles */
             this.wallLayer.weightedRandomize(TILES.WALL.TOP_UP, left + 1, top - 1, width - 4, 1);
             this.wallLayer.weightedRandomize(TILES.WALL.TOP_DOWN, left + 1, top, width - 4, 1);
@@ -122,18 +117,16 @@ export default class DungeonScene extends Phaser.Scene
         this.layerCollission(); /* Layers collisions */
     }
 
-    layerCollission()
-    {
-        const collisionArray = [-1, 18, 16,0,117, 185, 188]
+    layerCollission() {
+        const collisionArray = [-1, 18, 16, 0, 117, 185, 188]
         this.groundLayer.setCollisionByExclusion(collisionArray);
         this.wallLayer.setCollisionByExclusion(collisionArray);
         this.stuffLayer.setCollisionByExclusion(collisionArray);
         //this.groundLayer.setCollisionByProperty({ collides: true }); 
-		this.wallLayer.setCollisionByProperty({ collides: true }); 
+        this.wallLayer.setCollisionByProperty({ collides: true });
     }
 
-    dungeonStageChange(endRoom)
-    {
+    dungeonStageChange(endRoom) {
         this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY); /* Place stairs in the stage */
         this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
             this.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
@@ -148,8 +141,7 @@ export default class DungeonScene extends Phaser.Scene
         });
     }
 
-    generateStuffs(rooms)
-    {
+    generateStuffs(rooms) {
         const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
         otherRooms.forEach((room) => {
             const rand = Math.random();
@@ -178,25 +170,22 @@ export default class DungeonScene extends Phaser.Scene
 
 
     /* Player Configs */
-    playerConfig(startRoom, map)
-    {
+    playerConfig(startRoom, map) {
         const playerRoom = startRoom;
         const x = map.tileToWorldX(playerRoom.centerX);
         const y = map.tileToWorldY(playerRoom.centerY);
-        this.player = new Player(this, x, y);       
-        this.playerCollision(); /* Player collision with layers */ 
-        this.cameraConfig(map); /* Camera setup */ 
+        this.player = new Player(this, x, y);
+        this.playerCollision(); /* Player collision with layers */
+        this.cameraConfig(map); /* Camera setup */
     }
 
-    playerCollision()
-    {
+    playerCollision() {
         this.physics.add.collider(this.player.sprite, this.groundLayer);
         this.physics.add.collider(this.player.sprite, this.wallLayer);
-        this.physics.add.collider(this.player.sprite, this.stuffLayer);  
+        this.physics.add.collider(this.player.sprite, this.stuffLayer);
     }
 
-    cameraConfig(map)
-    {
+    cameraConfig(map) {
         const camera = this.cameras.main; /* Phaser default camera */
         camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels); /* Constrain the camera on tileMap */
         camera.startFollow(this.player.sprite);
@@ -204,14 +193,13 @@ export default class DungeonScene extends Phaser.Scene
 
 
     /* Enemies Configs */
-    enemiesConfig(startRoom, map)
-    {
+    enemiesConfig(startRoom, map) {
         const playerRoom = startRoom;
         const x = map.tileToWorldX(playerRoom.centerX);
         const y = map.tileToWorldY(playerRoom.centerY);
-        const skeleton = this.add.skeleton(x-100, y);
-        const skull = this.add.skull(x+100, y);
+        const skeleton = this.add.skeleton(x - 100, y);
+        const skull = this.add.skull(x + 100, y);
     }
-    
+
 }
 

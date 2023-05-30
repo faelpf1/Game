@@ -1,4 +1,4 @@
-//import LoadGame from './scenes/loadGame.js';
+import LoadGame from './scenes/loadGame.js';
 import DungeonScene from './scenes/dungeonScene.js';
 
 const config = {
@@ -15,7 +15,7 @@ const config = {
             debug: true
         }
     },
-    scene: DungeonScene,
+    scene: [LoadGame, DungeonScene],
 };
 
 const game = new Phaser.Game(config);
