@@ -1,6 +1,5 @@
 export default class LoadGame extends Phaser.Scene 
 {
-
     constructor() 
     {
         super({ key: 'LoadGame' });
@@ -13,6 +12,4 @@ export default class LoadGame extends Phaser.Scene
         this.load.spritesheet('enemies','assets/enemy/teste.png', { frameWidth: 16, frameHeight: 16, margin: 0, spacing: 0 } );
         this.load.on('complete', ()=>{ this.scene.start('DungeonScene') });
     }
-
-
 }
