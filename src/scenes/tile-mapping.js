@@ -21,7 +21,7 @@ const TILE_MAPPING = {
 		LEFT: [{ index: 50, weight: 4, collides: true}],
 		RIGHT: [{ index: 48, weight: 4, collides: true}],
 	},
-	FLOOR: [{ index: 185, weight: 10 }, { index: 188, weight: 1 }],
+	FLOOR: [{ index: 185, weight: 10 }, { index: 188, weight: 0.25 }],
 	POT: [{ index: [364, 396, 428], weight: 1 }],
 	DOOR: {
 		TOP_UP: [84, 185, 185, 83],
