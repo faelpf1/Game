@@ -27,7 +27,7 @@ export default class DungeonScene extends Phaser.Scene {
 
         this.playerConfig(startRoom, map); /* Place the player in the first room */
 
-        this.enemiesConfig(startRoom, map); /* Enemies placement */
+        this.enemiesConfig(map, rooms); /* Enemies placement */
 
         this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
     }
@@ -45,9 +45,7 @@ export default class DungeonScene extends Phaser.Scene {
         //this.tilemapVisibility.setActiveRoom(playerRoom);
     }
 
-
     /* Dungeon Configs */
-
     dungeonConfig() {
         this.dungeon = new Dungeon({
             width: 50,
@@ -122,7 +120,6 @@ export default class DungeonScene extends Phaser.Scene {
         this.groundLayer.setCollisionByExclusion(collisionArray);
         this.wallLayer.setCollisionByExclusion(collisionArray);
         this.stuffLayer.setCollisionByExclusion(collisionArray);
-        //this.groundLayer.setCollisionByProperty({ collides: true }); 
         this.wallLayer.setCollisionByProperty({ collides: true });
     }
 
@@ -193,12 +190,39 @@ export default class DungeonScene extends Phaser.Scene {
 
 
     /* Enemies Configs */
-    enemiesConfig(startRoom, map) {
-        const playerRoom = startRoom;
-        const x = map.tileToWorldX(playerRoom.centerX);
-        const y = map.tileToWorldY(playerRoom.centerY);
-        const skeleton = this.add.skeleton(x - 100, y);
-        const skull = this.add.skull(x + 100, y);
+    enemiesConfig(map, rooms) 
+    {
+        const enemiesRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
+        enemiesRooms.forEach((room) => {
+            const x = map.tileToWorldX(room.centerX);
+            const y = map.tileToWorldY(room.centerY);
+            const rand = Math.random();
+            if (rand <= 0.1) {
+                for (let i = 0; i < 3; i++) {
+                    this.add.skull(x+i*50, y);
+                    this.add.skeleton(x+i*50, y+50);
+                }
+            } else if (rand <= 0.25) {
+                for (let i = 0; i < 2; i++) {
+                    this.add.skull(x+i*50, y);
+                    this.add.skeleton(x+i*50, y+50);
+                }
+            } else if (rand <= 0.25) {
+                this.add.skull(x, y);
+                this.add.skull(x+50, y);
+            } else if (rand <= 0.5) {
+                this.add.skull(x, y);
+                this.add.skeleton(x+50, y);
+            } else if (rand <= 0.75) {
+                this.add.skeleton(x, y);
+                this.add.skeleton(x+50, y);
+            } else if (rand <= 0.80) {
+                this.add.skull(x, y);
+            } else {
+                this.add.skeleton(x, y);
+            }
+        });
+
     }
 
 }
