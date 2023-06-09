@@ -6,6 +6,7 @@ import Text from '../../components/text.js';
 import cameraConfig from './cameraConfig.js';
 import playerConfig from './playerConfig.js';
 import generateMap from './generateMap.js';
+import generateStuff from './generateStuff.js';
 
 export default class DungeonScene extends Phaser.Scene {
     constructor() {
@@ -17,28 +18,21 @@ export default class DungeonScene extends Phaser.Scene {
         this.level++;
         
         this.hasPlayerReachedStairs = false;
-        this.registry.set('stageInfo', this.level); /* Pass current level to levelinfo scene */ 
+        this.registry.set('stageInfo', this.level); /* Pass current level to levelInfo scene */ 
         
         this.dungeonConfig();
         const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
-        
         this.mapConfig(map);
-        
         const rooms = this.dungeon.rooms.slice();
-        const startRoom = rooms.shift();
-        const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
+        
+        //generateStuff(rooms, this.stuffLayer);
 
-        //this.generateStuffs(rooms);
+        this.dungeonStageChange(rooms); /* Stairs config */
 
-        this.dungeonStageChange(endRoom); /* Stairs config */
-
-        //playerConfig(startRoom, map); /* Place the player in the first room */
-        this.playerConfig(startRoom, map); /* Place the player in the first room */
+        //playerConfig(rooms, map);
+        this.playerConfig(rooms, map); /* Place the player in the first room */
 
         this.enemiesConfig(map, rooms); /* Enemies placement */
-
-        //var graphics = new MyGraphics(scene, options);
-        
     }
 
     update(time, delta) {
@@ -72,10 +66,11 @@ export default class DungeonScene extends Phaser.Scene {
         this.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
         this.stuffLayer = map.createBlankLayer("Stuff", tileset); /* Layer for stuffs or objects */
         generateMap(this.dungeon, map, tileset, this.groundLayer, this.wallLayer/*, this.stuffLayer*/);
-        //({stuffLayer: this.stuffLayer} = generateMap(this.dungeon, map, tileset, this.groundLayer, this.wallLayer));
+        //({stuffLayer: this.stuffLayer} = generateMap(this.dungeon, map, tileset, this.groundLayer, this.wallLayer)); //testing object destructuring
     }
 
-    dungeonStageChange(endRoom) {
+    dungeonStageChange(rooms) {
+        const endRoom = Phaser.Utils.Array.RemoveRandomElement(rooms);
         this.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY); /* Place stairs in the stage */
         this.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
             this.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
@@ -91,39 +86,11 @@ export default class DungeonScene extends Phaser.Scene {
         });
     }
 
-    // generateStuffs(rooms) {
-    //     const otherRooms = Phaser.Utils.Array.Shuffle(rooms).slice(0, rooms.length * 0.9);
-    //     otherRooms.forEach((room) => {
-    //         const rand = Math.random();
-    //         if (rand <= 0.25) {
-    //             // 25% chance of chest
-    //             this.stuffLayer.putTileAt(TILES.CHEST, room.centerX, room.centerY);
-    //         } else if (rand <= 0.5) {
-    //             // 50% chance of a pot anywhere in the room... except don't block a door!
-    //             const x = Phaser.Math.Between(room.left + 2, room.right - 2);
-    //             const y = Phaser.Math.Between(room.top + 2, room.bottom - 2);
-    //             this.stuffLayer.weightedRandomize(x, y, 1, 1, TILES.POT);
-    //         } else {
-    //             // 25% of either 2 or 4 towers, depending on the room size
-    //             if (room.height >= 9) {
-    //                 this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY + 1);
-    //                 this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY + 1);
-    //                 this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 2);
-    //                 this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 2);
-    //             } else {
-    //                 this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX - 1, room.centerY - 1);
-    //                 this.stuffLayer.putTilesAt(TILES.TOWER, room.centerX + 1, room.centerY - 1);
-    //             }
-    //         }
-    //     });
-    // }
-
-
     /* Player Configs */
-    playerConfig(startRoom, map) {
-        const playerRoom = startRoom;
-        const x = map.tileToWorldX(playerRoom.centerX);
-        const y = map.tileToWorldY(playerRoom.centerY);
+    playerConfig(rooms, map) {
+        const startRoom = rooms.shift();
+        const x = map.tileToWorldX(startRoom.centerX);
+        const y = map.tileToWorldY(startRoom.centerY);
         this.player = new Player(this, x, y);
         this.playerCollision(); /* Player collision with layers */
         cameraConfig(this.cameras.main, map, this.player.sprite);

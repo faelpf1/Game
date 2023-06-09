@@ -1,3 +1,5 @@
+
+/* NOT WORKING YET */
 import cameraConfig from './cameraConfig.js';
 
 export default function playerConfig(playerRoom, map, player){
