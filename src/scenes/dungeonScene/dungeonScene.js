@@ -1,8 +1,10 @@
-import Player from "./player.js";
-import TILES from "./tile-mapping.js";
-import Skeleton from '../enemies/skeleton.js';
-import Skull from '../enemies/skull.js';
-import Text from '../components/text.js';
+import Player from '../player.js';
+import TILES from './tile-mapping.js';
+import Skeleton from '../../enemies/skeleton.js';
+import Skull from '../../enemies/skull.js';
+import Text from '../../components/text.js';
+import cameraConfig from './cameraConfig.js';
+import playerConfig from './playerConfig.js'
 
 export default class DungeonScene extends Phaser.Scene {
     constructor() {
@@ -28,13 +30,10 @@ export default class DungeonScene extends Phaser.Scene {
 
         this.dungeonStageChange(endRoom); /* Stairs config */
 
+        //playerConfig(startRoom, map); /* Place the player in the first room */
         this.playerConfig(startRoom, map); /* Place the player in the first room */
 
         this.enemiesConfig(map, rooms); /* Enemies placement */
-
-        //this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
-
-        //this.text = new Text(this, this.player.sprite.x, this.player.sprite.y, `Current level: ${this.level}` );
 
         //var graphics = new MyGraphics(scene, options);
         
@@ -181,7 +180,8 @@ export default class DungeonScene extends Phaser.Scene {
         const y = map.tileToWorldY(playerRoom.centerY);
         this.player = new Player(this, x, y);
         this.playerCollision(); /* Player collision with layers */
-        this.cameraConfig(map); /* Camera setup */
+        cameraConfig(this.cameras.main, map, this.player.sprite);
+        //this.cameraConfig(map); /* Camera setup */
     }
 
     playerCollision() {
@@ -189,13 +189,6 @@ export default class DungeonScene extends Phaser.Scene {
         this.physics.add.collider(this.player.sprite, this.wallLayer);
         this.physics.add.collider(this.player.sprite, this.stuffLayer);
     }
-
-    cameraConfig(map) {
-        const camera = this.cameras.main; /* Phaser default camera */
-        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels); /* Constrain the camera on tileMap */
-        camera.startFollow(this.player.sprite);
-    }
-
 
     /* Enemies Configs */
     enemiesConfig(map, rooms) 

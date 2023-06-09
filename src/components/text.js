@@ -12,6 +12,5 @@ export default class Text extends Phaser.GameObjects.Text {
 		});
 		this.setOrigin(0, 0);
 		scene.add.existing(this);
-		
 	}
 }
