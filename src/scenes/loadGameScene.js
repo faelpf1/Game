@@ -1,8 +1,8 @@
-export default class LoadGame extends Phaser.Scene 
+export default class LoadGameScene extends Phaser.Scene 
 {
     constructor() 
     {
-        super({ key: 'LoadGame' });
+        super({ key: 'LoadGameScene' });
     }
 
     preload() 

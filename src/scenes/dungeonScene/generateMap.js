@@ -1,19 +1,19 @@
 import TILES from './tile-mapping.js';
 
-export default function generateMap(dungeon, map, tileset, groundLayer, wallLayer) {  
-    // this.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK); /* Layer for floors */
-    // this.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
-    //this.stuffLayer = map.createBlankLayer("Stuff", tileset); /* Layer for stuffs or objects */
+export default function generateMap(props, map) {  
+    const tileset = map.addTilesetImage("tiles", null, 48, 48, 0, 0);  /* tile height and tile width, tile margin, tile spacing */
+    props.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK); /* Layer for floors */
+    props.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
+    props.stuffLayer = map.createBlankLayer("Stuff", tileset); /* Layer for stuffs or objects */
 
-    dungeon.rooms.forEach((room) => {
+    props.dungeon.rooms.forEach((room) => {
         const { x, y, width, height, left, right, top, bottom } = room;
-        placeFloor(groundLayer, x, y, width, height);
-        placeCornerWall(wallLayer, left, right, top, bottom);
-        placeMiddleWall(wallLayer, left, right, top, bottom, width, height);
-        placePathBetweenRoom(room, wallLayer, groundLayer, x, y);
-        layerCollission(groundLayer, wallLayer);
+        placeFloor(props.groundLayer, x, y, width, height);
+        placeCornerWall(props.wallLayer, left, right, top, bottom);
+        placeMiddleWall(props.wallLayer, left, right, top, bottom, width, height);
+        placePathBetweenRoom(room, props.wallLayer, props.groundLayer, x, y);
+        layerCollission(props.groundLayer, props.wallLayer, props.stuffLayer);
     });
-    //return {/*groundLayer, wallLayer,*/ stuffLayer};
 }
 
 function placeFloor(groundLayer, x, y, width, height){
@@ -66,10 +66,10 @@ function placePathBetweenRoom(room, wallLayer, groundLayer, x, y){
     }
 }
 
-function layerCollission(groundLayer, wallLayer){
+function layerCollission(groundLayer, wallLayer, stuffLayer){
     const collisionArray = [-1, 18, 16, 0, 117, 185, 188];
     groundLayer.setCollisionByExclusion(collisionArray);
     wallLayer.setCollisionByExclusion(collisionArray);
-    //stuffLayer.setCollisionByExclusion(collisionArray);
+    stuffLayer.setCollisionByExclusion(collisionArray);
     wallLayer.setCollisionByProperty({ collides: true });
 }

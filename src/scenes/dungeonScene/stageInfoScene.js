@@ -1,8 +1,8 @@
 import Text from '../../components/text.js';
 
-export default class LevelInfo extends Phaser.Scene {
+export default class StageInfoScene extends Phaser.Scene {
     constructor() {
-        super({ key: 'LevelInfo' });
+        super({ key: 'StageInfoScene' });
     }
 
     create() {

@@ -1,5 +1,3 @@
-// - Single index, array or 2D array : putTileAt
-// - Array of weights: weightedRandomize
 const TILE_MAPPING = {
 	BLANK: 117,
 	WALL: {
