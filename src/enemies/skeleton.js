@@ -1,4 +1,4 @@
-import Enemies from "./enemies.js";
+import Enemies from "../components/enemies.js";
 
 export default Phaser.GameObjects.GameObjectFactory.register('skeleton', function (x, y) 
 {

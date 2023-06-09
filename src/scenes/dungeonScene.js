@@ -2,6 +2,7 @@ import Player from "./player.js";
 import TILES from "./tile-mapping.js";
 import Skeleton from '../enemies/skeleton.js';
 import Skull from '../enemies/skull.js';
+import Text from '../components/text.js';
 
 export default class DungeonScene extends Phaser.Scene {
     constructor() {
@@ -11,8 +12,10 @@ export default class DungeonScene extends Phaser.Scene {
 
     create() {
         this.level++;
+        
         this.hasPlayerReachedStairs = false;
-
+        this.registry.set('stageInfo', this.level);
+        
         this.dungeonConfig();
         const map = this.make.tilemap({ tileWidth: 48, tileHeight: 48, width: this.dungeon.width, height: this.dungeon.height });
         this.generateTilesMap(map); /* Generate tiles on map */
@@ -29,13 +32,17 @@ export default class DungeonScene extends Phaser.Scene {
 
         this.enemiesConfig(map, rooms); /* Enemies placement */
 
-        this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
+        //this.add.text(16, 16, `Current level: ${this.level}`, { font: "18px monospace", fill: "#000000", padding: { x: 5, y: 5 }, backgroundColor: "#ffffff" }).setScrollFactor(0);
+
+        //this.text = new Text(this, this.player.sprite.x, this.player.sprite.y, `Current level: ${this.level}` );
+
+        //var graphics = new MyGraphics(scene, options);
+        
     }
 
     update(time, delta) {
         if (this.hasPlayerReachedStairs) return;
         this.player.update();
-
         // Find the player's room using another helper method from the dungeon that converts from
         // dungeon XY (in grid units) to the corresponding room object
         //const playerTileX = this.groundLayer.worldToTileX(this.player.sprite.x);
@@ -134,6 +141,7 @@ export default class DungeonScene extends Phaser.Scene {
             cam.once("camerafadeoutcomplete", () => {
                 this.player.destroy();
                 this.scene.restart();
+                this.scene.launch('LevelInfo'); /* Update level in levelinfo scene */
             });
         });
     }

@@ -1,5 +1,6 @@
 import LoadGame from './scenes/loadGame.js';
 import DungeonScene from './scenes/dungeonScene.js';
+import LevelInfo from './scenes/levelInfo.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -15,7 +16,7 @@ const config = {
             debug: true
         }
     },
-    scene: [LoadGame, DungeonScene],
+    scene: [LoadGame, DungeonScene, LevelInfo],
 };
 
 const game = new Phaser.Game(config);
