@@ -17,7 +17,7 @@ const config = {
             debug: true
         }
     },
-    scene: [BattleScene],// [LoadGameScene, DungeonScene, StageInfoScene],
+    scene: [LoadGameScene, BattleScene],// [LoadGameScene, DungeonScene, StageInfoScene],
 };
 
 const game = new Phaser.Game(config);

@@ -13,6 +13,6 @@ export default class BattleScene extends Phaser.Scene {
         g.playerStatus();
         g.playerAction();
         g.enemiesStatus();
-        this.add.skeleton(20, 30);
+        this.add.skeleton(100, 200, true);
     }
 }
