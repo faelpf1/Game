@@ -7,12 +7,13 @@ export default class BattleScene extends Phaser.Scene {
     }
 
     create () {
-        // Criar objeto Unidade para player e inimigo
-        // Chamar objeto text
+        // Criar objeto Unidade para player
         const g = new Menu(this);
         g.playerStatus();
         g.playerAction();
         g.enemiesStatus();
-        this.add.skeleton(100, 200, true);
+        // objeto para representar o conjunto de inimigos
+        const c = this.add.skeleton(100, 200, true);
+        c.setScale(5);
     }
 }
