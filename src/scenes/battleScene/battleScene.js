@@ -1,4 +1,5 @@
 import Menu from '../../components/menu.js';
+import Skeleton from '../../enemies/skeleton.js';
 
 export default class BattleScene extends Phaser.Scene {
     constructor() {
@@ -9,10 +10,9 @@ export default class BattleScene extends Phaser.Scene {
         // Criar objeto Unidade para player e inimigo
         // Chamar objeto text
         const g = new Menu(this);
-        g.create();
-
-     
-        
-        
+        g.playerStatus();
+        g.playerAction();
+        g.enemiesStatus();
+        this.add.skeleton(20, 30);
     }
 }
