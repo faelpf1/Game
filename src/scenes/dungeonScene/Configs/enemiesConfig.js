@@ -57,5 +57,5 @@ function enemiesCollision(scene, spawns) {
 
 function meetEnemiesConfig(scene) {
     scene.cameras.main.shake(300);
-    // scene.scene.start('BattleScenes');
+    scene.scene.start('BattleScenes');
 }
