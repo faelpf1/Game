@@ -24,7 +24,7 @@ export default class DungeonScene extends Phaser.Scene {
         generateMap(this, map);
         stageChangeConfig(this, rooms);
         playerConfig(this, map, rooms); /* Player placement */
-        enemiesConfig(this.add, map, rooms); /* Enemies placement */
+        enemiesConfig(this, map, rooms); /* Enemies placement */
     }
 
     update(time, delta) {

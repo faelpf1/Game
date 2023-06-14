@@ -14,6 +14,7 @@ function playerCollision(props) {
     props.physics.add.collider(props.player.sprite, props.groundLayer);
     props.physics.add.collider(props.player.sprite, props.wallLayer);
     props.physics.add.collider(props.player.sprite, props.stuffLayer);
+    props.physics.add.collider(props.player.sprite, props.spawns);
 }
 
 function cameraConfig(camera, map, playerSprite){
