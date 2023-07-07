@@ -2,6 +2,7 @@ import LoadGameScene from './scenes/loadGameScene.js';
 import DungeonScene from './scenes/dungeonScene/dungeonScene.js';
 import StageInfoScene from './scenes/dungeonScene/stageInfoScene.js';
 import BattleScene from './scenes/battleScene/battleScene.js';
+import getAxios from './components/getAxios.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -21,3 +22,7 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+const url = 'https://gameapirest.sistemamultimidia.repl.co/saveGameState/load/?stateId=A15J';
+
+const x = await getAxios(url);
+console.log(x)
