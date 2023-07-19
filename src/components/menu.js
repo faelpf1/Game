@@ -1,13 +1,16 @@
 import Text from "./text.js"
 import Graphic from "./graphic.js";
 
-export default class Menu extends Graphic {
-    constructor(scene) {
+export default class Menu extends Graphic 
+{
+    constructor(scene) 
+    {
         super(scene);
         this.scene = scene;
     }
 
-    playerStatus() {
+    playerStatus() 
+    {
         const x = 2;
         const y = 395; 
         const width = 180; 
@@ -17,7 +20,8 @@ export default class Menu extends Graphic {
         this.text = new Text(this.scene, x, y, `Player Status:\nHP: 100/100`);
     }
 
-    playerAction() {
+    playerAction() 
+    {
         const x = 182;
         const y = 395; 
         const width = 420; 
@@ -27,7 +31,8 @@ export default class Menu extends Graphic {
         this.text = new Text(this.scene, x, y, `Player Status:\nHP: 100/100`);
     }
 
-    enemiesStatus() {
+    enemiesStatus() 
+    {
         const x = 600;
         const y = 395; 
         const width = 200; 
