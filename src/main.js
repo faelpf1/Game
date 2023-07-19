@@ -22,7 +22,8 @@ const config = {
 };
 
 const game = new Phaser.Game(config);
+
 const url = 'https://gameapirest.sistemamultimidia.repl.co/saveGameState/load/?stateId=A15J';
 
 const x = await getAxios(url);
-console.log(x)
+//console.log(x)
