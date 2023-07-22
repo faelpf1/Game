@@ -1,3 +1,4 @@
+import MainMenuScene from './scenes/mainMenuScene.js';
 import LoadGameScene from './scenes/loadGameScene.js';
 import DungeonScene from './scenes/dungeonScene/dungeonScene.js';
 import StageInfoScene from './scenes/dungeonScene/stageInfoScene.js';
@@ -18,7 +19,7 @@ const config = {
             debug: true
         }
     },
-    scene: [LoadGameScene, DungeonScene, StageInfoScene, BattleScene],
+    scene: [MainMenuScene, LoadGameScene, DungeonScene, StageInfoScene, BattleScene],
 };
 
 const game = new Phaser.Game(config);
