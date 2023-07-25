@@ -15,5 +15,6 @@ export default class BattleScene extends Phaser.Scene {
         // objeto para representar o conjunto de inimigos
         const c = this.add.skeleton(100, 200, true);
         c.setScale(5);
+        
     }
 }
