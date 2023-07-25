@@ -1,5 +1,5 @@
 export default async function getAxios(url){
-    return axios.get(url)
+    return await axios.get(url)
     .then((res) => { 
         return res.data[0].level;
     })
