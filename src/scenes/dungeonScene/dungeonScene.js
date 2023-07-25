@@ -14,7 +14,12 @@ export default class DungeonScene extends Phaser.Scene {
     create() {
         this.level++; 
         this.hasPlayerReachedStairs = false;
+        this.levelLoad = this.registry.values.stageInfoLoad;
+        if(this.levelLoad){
+            this.level=this.levelLoad;
+        }
         this.registry.set('stageInfo', this.level); /* Pass current level to levelInfo scene */ 
+        
         
         dungeonConfig(this);
 
