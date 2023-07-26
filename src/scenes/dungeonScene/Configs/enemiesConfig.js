@@ -52,7 +52,7 @@ function enemiesCollision(scene, spawns) {
     scene.physics.add.collider(spawns, scene.groundLayer);
     scene.physics.add.collider(spawns, scene.wallLayer);
     scene.physics.add.collider(spawns, scene.stuffLayer);
-    scene.physics.add.collider(scene.player.sprite, spawns, meetEnemiesConfig(scene), null, this);
+    //scene.physics.add.collider(scene.player.sprite, spawns, meetEnemiesConfig(scene), null, this);
 }
 
 function meetEnemiesConfig(scene) {

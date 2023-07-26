@@ -29,7 +29,7 @@ export default class DungeonScene extends Phaser.Scene {
         generateMap(this, map);
         stageChangeConfig(this, rooms);
         playerConfig(this, map, rooms); /* Player placement */
-        //enemiesConfig(this, map, rooms); /* Enemies placement */  <<<--erro nessa parte no mapa
+        enemiesConfig(this, map, rooms); /* Enemies placement  <<<--erro nessa parte no mapa */
     }
 
     update(time, delta) {
