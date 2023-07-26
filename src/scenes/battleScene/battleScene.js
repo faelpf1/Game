@@ -65,7 +65,8 @@ export default class BattleScene extends Phaser.Scene {
                 g.enemies_status_text.setText(`Enemies Status:\nHP: `+ this.life_enemy+`/100`);
             } else {
                 console.log('Você venceu!');
-                thisBattleScene.scene.start('BattleScene');
+                thisBattleScene.scene.start('DungeonScene');
+                thisBattleScene.scene.start('StageInfoScene');
             }
         });
     }
