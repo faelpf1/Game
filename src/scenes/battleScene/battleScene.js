@@ -60,10 +60,12 @@ export default class BattleScene extends Phaser.Scene {
 
         ataque_icon.on('pointerup', ()=>{
             console.log(this.life_enemy);
-            if (this.life_enemy <= 100 && this.life_enemy >= 0) {
-                this.life_enemy -= 10;
+            this.life_enemy -= 10;
+            if (this.life_enemy <= 100 && this.life_enemy > 0) {
+                //this.life_enemy -= 10;
                 g.enemies_status_text.setText(`Enemies Status:\nHP: `+ this.life_enemy+`/100`);
             } else {
+                //this.life_enemy -= 10;
                 console.log('Você venceu!');
                 thisBattleScene.scene.start('DungeonScene');
                 thisBattleScene.scene.start('StageInfoScene');
