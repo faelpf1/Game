@@ -57,19 +57,5 @@ export default class MainMenuScene extends Phaser.Scene
             this.scene.start('LoadGameScene');
         });
 
-        /* testing battlescene */
-        let testButton = this.add.image(this.game.renderer.width/2, this.game.renderer.height/2 + 200, 'test').setDepth(1);
-        testButton.setInteractive(); 
-        testButton.on('pointerover', ()=>{
-            selectionButton.setVisible(true);
-            selectionButton.x = testButton.x - testButton.width;
-            selectionButton.y = testButton.y;
-        });
-        testButton.on('pointerout', ()=>{
-            selectionButton.setVisible(false);
-        });
-        testButton.on('pointerdown', ()=>{
-            this.scene.start('BattleScene');
-        });   
     }
 }
