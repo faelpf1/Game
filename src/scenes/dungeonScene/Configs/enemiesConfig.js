@@ -1,8 +1,7 @@
 import Skeleton from '../../../enemies/skeleton.js';
 import Skull from '../../../enemies/skull.js';
 
-export default function enemiesConfig(thisScene, map, rooms) {
-    thisScene.enemies = [];
+export default function enemiesConfig(thisScene, map) {
     thisScene.physics.world.bounds.width = map.widthInPixels;
     thisScene.physics.world.bounds.height = map.heightInPixels;
     thisScene.player.sprite.body.setCollideWorldBounds(true);
@@ -14,6 +13,4 @@ export default function enemiesConfig(thisScene, map, rooms) {
     }      
 
     thisScene.physics.add.overlap(thisScene.player.sprite, thisScene.spawns, thisScene.onMeetEnemy, false, thisScene);
-
-    
 }

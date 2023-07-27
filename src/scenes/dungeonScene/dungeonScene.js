@@ -29,7 +29,7 @@ export default class DungeonScene extends Phaser.Scene {
         generateMap(this, map);
         stageChangeConfig(this, rooms);
         playerConfig(this, map, rooms); /* Player placement */
-        enemiesConfig(this, map, rooms); /* Enemies placement */
+        enemiesConfig(this, map); /* Enemies placement */
     }
 
     update(time, delta) {
@@ -46,8 +46,10 @@ export default class DungeonScene extends Phaser.Scene {
     onMeetEnemy(player, zone){
         zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
         zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
-        this.cameras.main.shake(3000);
-        this.scene.start('BattleScene');
+        //this.registry.set('stageInfo', this.level);
+        this.cameras.main.shake(500);
+        this.scene.sleep('StageInfoScene');
+        this.scene.switch('BattleScene');
     }
 }
 

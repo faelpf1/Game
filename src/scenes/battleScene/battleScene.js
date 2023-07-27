@@ -67,8 +67,9 @@ export default class BattleScene extends Phaser.Scene {
             } else {
                 //this.life_enemy -= 10;
                 console.log('Você venceu!');
-                thisBattleScene.scene.start('DungeonScene');
-                thisBattleScene.scene.start('StageInfoScene');
+                //
+                thisBattleScene.scene.wake('StageInfoScene');
+                thisBattleScene.scene.switch('DungeonScene');                
             }
         });
     }
