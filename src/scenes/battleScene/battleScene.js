@@ -61,13 +61,15 @@ export default class BattleScene extends Phaser.Scene {
         ataque_icon.on('pointerup', ()=>{
             console.log(this.life_enemy);
             this.life_enemy -= 10;
+            console.log(this.life_hero, this.life_enemy)  
             if (this.life_enemy <= 100 && this.life_enemy > 0) {
-                //this.life_enemy -= 10;
                 g.enemies_status_text.setText(`Enemies Status:\nHP: `+ this.life_enemy+`/100`);
             } else {
-                //this.life_enemy -= 10;
                 console.log('Você venceu!');
-                //
+                this.life_hero = 100;
+                this.life_enemy = 100;
+                g.enemies_status_text.setText(`Enemies Status:\nHP: `+ this.life_enemy+`/100`);
+                console.log(this.life_hero, this.life_enemy)  
                 thisBattleScene.scene.wake('StageInfoScene');
                 thisBattleScene.scene.switch('DungeonScene');                
             }
@@ -86,10 +88,10 @@ export default class BattleScene extends Phaser.Scene {
         });
 
         defesa_icon.on('pointerup', ()=>{
-            if (this.life_hero <= 100 && this.life_hero >= 0) {
-                this.life_hero -= this.atack_enemy/10;
-                g.player_status_text.setText(`Player Status:\nHP: `+ this.life_hero+`/100`);
-            } 
+            // if (this.life_hero <= 100 && this.life_hero >= 0) {
+            //     this.life_hero -= this.atack_enemy/10;
+            //     g.player_status_text.setText(`Player Status:\nHP: `+ this.life_hero+`/100`);
+            // } 
         });
     }
 }
