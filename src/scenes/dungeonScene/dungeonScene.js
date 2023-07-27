@@ -29,18 +29,25 @@ export default class DungeonScene extends Phaser.Scene {
         generateMap(this, map);
         stageChangeConfig(this, rooms);
         playerConfig(this, map, rooms); /* Player placement */
-        enemiesConfig(this, map, rooms); /* Enemies placement  <<<--erro nessa parte no mapa */
+        enemiesConfig(this, map, rooms); /* Enemies placement */
     }
 
     update(time, delta) {
         if (this.hasPlayerReachedStairs) return;
         this.player.update();
-        // Find the player's room using another helper method from the dungeon that converts from
-        // dungeon XY (in grid units) to the corresponding room object
+        //this.onMeetEnemie(this.groundLayer.worldToTileX(this.player.sprite.x), this.groundLayer.worldToTileY(this.player.sprite.y));
+        //console.log(this.groundLayer.worldToTileX(this.player.sprite.x), this.groundLayer.worldToTileY(this.player.sprite.y));
         //const playerTileX = this.groundLayer.worldToTileX(this.player.sprite.x);
         //const playerTileY = this.groundLayer.worldToTileY(this.player.sprite.y);
         //const playerRoom = this.dungeon.getRoomAt(playerTileX, playerTileY);
         //this.tilemapVisibility.setActiveRoom(playerRoom);
+    }
+
+    onMeetEnemy(player, zone){
+        zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
+        zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
+        this.cameras.main.shake(3000);
+        this.scene.start('BattleScene');
     }
 }
 

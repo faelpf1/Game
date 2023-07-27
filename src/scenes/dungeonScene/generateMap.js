@@ -5,6 +5,7 @@ export default function generateMap(props, map) {
     props.groundLayer = map.createBlankLayer("Ground", tileset).fill(TILES.BLANK); /* Layer for floors */
     props.wallLayer = map.createBlankLayer("Wall", tileset).fill(TILES.BLANK); /* Layer for walls */
     props.stuffLayer = map.createBlankLayer("Stuff", tileset); /* Layer for stuffs or objects */
+   
 
     props.dungeon.rooms.forEach((room) => {
         const { x, y, width, height, left, right, top, bottom } = room;
@@ -13,6 +14,7 @@ export default function generateMap(props, map) {
         placeMiddleWall(props.wallLayer, left, right, top, bottom, width, height);
         placePathBetweenRoom(room, props.wallLayer, props.groundLayer, x, y);
         layerCollission(props.groundLayer, props.wallLayer, props.stuffLayer);
+
     });
 }
 
