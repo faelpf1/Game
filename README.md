@@ -1,4 +1,5 @@
 ## Projeto de sistema de multimidia
+<<<<<<< HEAD
 
 ## Resumo
 
@@ -27,3 +28,5 @@ Projeto da Diciplina de Sistema de Multimidia 2023/01
 ## Vídeo
 
 https://www.youtube.com/watch?v=OS7neDUUhPE
+=======
+>>>>>>> refs/remotes/origin/main
