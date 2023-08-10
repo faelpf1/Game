@@ -1,3 +1,4 @@
+import Enemies from '../../../components/enemies.js';
 import Skeleton from '../../../enemies/skeleton.js';
 import Skull from '../../../enemies/skull.js';
 
@@ -6,15 +7,21 @@ export default function enemiesConfig(thisScene, map) {
     thisScene.physics.world.bounds.width = map.widthInPixels;
     thisScene.physics.world.bounds.height = map.heightInPixels;
     thisScene.player.sprite.body.setCollideWorldBounds(true);
-    thisScene.spawns = thisScene.physics.add.group({ classType: Phaser.GameObjects.Zone });
+    thisScene.spawns = thisScene.physics.add.group({classType: Enemies,
+        createCallback: (go) => {
+            const skullMove = go;
+            skullMove.body.onCollide = true;
+        }
+    });
     
-    for(var i = 0; i < 40; i++) {
+    //Phaser.Actions.RandomRectangle(thisScene.spawns.getChildren(), thisScene.physics.world.bounds);
+    
+    for(var i = 0; i < 100; i++) {
         var x = Phaser.Math.RND.between(0, thisScene.physics.world.bounds.width);
         var y = Phaser.Math.RND.between(0, thisScene.physics.world.bounds.height);
-        thisScene.spawns.create(x, y, 48, 48);            
+        thisScene.spawns.get(x, y,'Enemies');
     }
  
-        
-    
-    thisScene.physics.add.overlap(thisScene.player.sprite, thisScene.spawns, thisScene.onMeetEnemy, false, thisScene);
+    thisScene.physics.add.collider(thisScene.wallLayer, thisScene.spawns);    
+    thisScene.physics.add.collider(thisScene.player.sprite, thisScene.spawns, () => thisScene.onMeetEnemy(null, thisScene), null, thisScene);
 }

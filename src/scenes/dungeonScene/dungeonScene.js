@@ -42,6 +42,7 @@ export default class DungeonScene extends Phaser.Scene {
 
     onMeetEnemy(player, zone){
         //this.cameras.main.shake(500);
+        console.log(zone)
         zone.x = Phaser.Math.RND.between(0, this.physics.world.bounds.width);
         zone.y = Phaser.Math.RND.between(0, this.physics.world.bounds.height);
        

@@ -52,11 +52,11 @@ export default class Player extends Phaser.GameObjects.Sprite {
         const sprite = this.sprite;
         const speed = 300;
         
-        sprite.body.setVelocity(0); /* Stop any previous movement from the last frame */
+        sprite.body?.setVelocity(0); /* Stop any previous movement from the last frame */
 
         this.playerMoves(keys, sprite, speed);
         
-        sprite.body.velocity.normalize().scale(speed); /* Normalize and scale the velocity so that sprite can't move faster along a diagonal */
+        sprite.body?.velocity.normalize().scale(speed); /* Normalize and scale the velocity so that sprite can't move faster along a diagonal */
 
         this.playerMovesAnims(keys, sprite);
     }
@@ -66,29 +66,29 @@ export default class Player extends Phaser.GameObjects.Sprite {
         // Horizontal movement
         if (keys.left.isDown) 
         {
-            sprite.body.setVelocityX(-speed);
+            sprite.body?.setVelocityX(-speed);
             sprite.setFlipX(true);
         } 
         else if (keys.right.isDown) 
         {
-            sprite.body.setVelocityX(speed);
+            sprite.body?.setVelocityX(speed);
             sprite.setFlipX(false);
         }
 
         // Vertical movement
         if (keys.up.isDown) 
         {
-            sprite.body.setVelocityY(-speed);
+            sprite.body?.setVelocityY(-speed);
         } 
         else if (keys.down.isDown) 
         {
-            sprite.body.setVelocityY(speed);
+            sprite.body?.setVelocityY(speed);
         }
     }
 
     playerMovesAnims(keys, sprite)
     {
-        const prevVelocity = sprite.body.velocity.clone();
+        const prevVelocity = sprite.body?.velocity.clone();
         if (keys.left.isDown || keys.right.isDown) 
         {
             sprite.anims.play("player-walk", true);
@@ -103,10 +103,10 @@ export default class Player extends Phaser.GameObjects.Sprite {
         } 
         else 
         {
-            sprite.anims.stop();
+            sprite.anims?.stop();
             // If we were moving & now we're not, then pick a single idle frame to use
-            if (prevVelocity.y < 0) sprite.anims.play("player-idle", true);//sprite.setTexture('characters', 8);
-            else sprite.anims.play("player-idle", true);//sprite.setTexture('characters', 8);
+            if (prevVelocity?.y < 0) sprite.anims.play("player-idle", true);//sprite.setTexture('characters', 8);
+            else sprite.anims?.play("player-idle", true);//sprite.setTexture('characters', 8);
         }
     }
 

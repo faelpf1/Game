@@ -6,7 +6,7 @@ export default function stageChangeConfig(props, rooms) {
         props.stuffLayer.putTileAt(TILES.STAIRS, endRoom.centerX, endRoom.centerY); /* Place stairs in the stage */
         props.stuffLayer.setTileIndexCallback(TILES.STAIRS, () => {
             props.stuffLayer.setTileIndexCallback(TILES.STAIRS, null);
-            props.hasPlayerReachedStairs = true;
+            props.hasPlayerReachedStairs = false;
             props.player.freeze();
             const cam = props.cameras.main;
             cam.fade(250, 0, 0, 0);
